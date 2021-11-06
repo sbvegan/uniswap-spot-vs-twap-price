@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { Pool } from "@uniswap/v3-sdk";
-import { Token, Price } from "@uniswap/sdk-core";
+import { Token } from "@uniswap/sdk-core";
 import { abi as IUniswapV3PoolABI } from "@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json";
 
 const pathToIPC = "/home/soyboy/.ethereum/geth.ipc";
@@ -80,7 +80,10 @@ async function main() {
       getPoolImmutables(),
       getPoolState(),
     ]);
-  
+
+    console.log(immutables)
+    console.log(state)
+
     const USDC = new Token(3, immutables.token0, 6, "USDC", "USD Coin");
     const WETH = new Token(3, immutables.token1, 18, "WETH", "Wrapped Ether");
   
@@ -93,16 +96,24 @@ async function main() {
       state.tick
     );
 
+    console.log('---------------------------')
+    console.log('POOL:')
     console.log(USDC_WETH_POOL)
+    console.log(USDC_WETH_POOL.tickCurrent.toFixed())
+    console.log(USDC_WETH_POOL.fee.toFixed())
+    console.log(USDC_WETH_POOL.priceOf(WETH).toFixed())
 
     const token0Price = USDC_WETH_POOL.token0Price;
     const token1Price = USDC_WETH_POOL.token1Price;
 
-    console.log(token0Price)
-    console.log(token1Price)
+    console.log('---------------------------')
+    console.log('token0Price (USDC/WETH):')
+    console.log(token0Price.toFixed())
+    console.log(token0Price.toSignificant())
+    console.log('token0Price: (WETH/USDC)')
+    console.log(token1Price.toFixed())
+    console.log(token1Price.toSignificant())
 
-    // TODO: how do I derive an integer/float price from this?
-    
   }
   
 main();
